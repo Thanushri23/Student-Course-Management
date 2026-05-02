@@ -33,6 +33,27 @@ The application follows a straightforward multi-layered architecture to ensure c
 6.  **View Binding:** The Controller takes the List of Objects and binds it to the Spring `Model`.
 7.  **Response to User:** The Controller returns the `list-students.jsp` page, which uses JSTL tags to render an HTML table containing the data and sends the final HTML page back to the user's browser.
 
+**Visual Data Flow:**
+```mermaid
+sequenceDiagram
+    participant User as Browser (User)
+    participant Controller as StudentController
+    participant Service as StudentService
+    participant Repo as StudentRepository
+    participant DB as H2 Database
+    participant View as list-students.jsp
+
+    User->>Controller: GET /students
+    Controller->>Service: getAllStudents()
+    Service->>Repo: findAllStudentsWithCourses()
+    Repo->>DB: Execute SQL (INNER JOIN)
+    DB-->>Repo: Return Result Set
+    Repo-->>Service: Return List<Student>
+    Service-->>Controller: Return List<Student>
+    Controller->>View: Add Data to Model & Return View Name
+    View-->>User: Render HTML Response
+```
+
 ---
 
 ## 3. Entity Relationship Design
